@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RainCheck</title>
+    <link rel="icon" href="Images/favicon.ico" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://kit.fontawesome.com/367fc9669b.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Lato&family=Shadows+Into+Light&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <header>
+        <div class="card card-body top-card">
+          <h1 class="title">RainCheck</h1>
+          <form>
+            <div class="row">
+              <div class="col-7">
+                <div class="input-group searchBarGroup ms-2">
+                  <button
+                    class="btn btn-outline-secondary"
+                    id="currentLoc"
+                    type="button"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-geo-alt"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z"
+                      />
+                      <path
+                        d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"
+                      />
+                    </svg>
+                  </button>
+
+                  <input
+                    type="text"
+                    class="form-control searchbarbox"
+                    list="datalistOptions"
+                    id="searchBar"
+                    placeholder="Enter a city"
+                  />
+
+                  <button
+                    class="btn btn-outline-secondary"
+                    type="button"
+                    id="searchbtn"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-search"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="col-5">
+                <div class="input-group temparture-switch">
+                  <span class="celsius-label">C </span>
+                  <div class="form-check form-switch">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="flexSwitchCheckDefault"
+                    />
+                    <label class="form-check-label" for="flexSwitchCheckDefault"
+                      >F</label
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <section class="pinned-searches ms-2">
+            <div class="row">
+              <span class="col-1">Pinned</span>
+              <span class="col-2">Search 1</span>
+              <span class="col-2">Search 2</span>
+              <span class="col-2">Search 3</span>
+            </div>
+          </section>
+        </div>
+      </header>
+
+      <main>
+        <!-- 
+            //Current info section & forecast section -->
+        <div class="card card-body bottom-card">
+          <section class="currentInformation ms-2">
+            <h2 class="card-title current-location" id="current-location">
+              Amsterdam, Netherlands
+            </h2>
+            <h3 class="current-date">Sunday 7 Feb 2021, 13:00 CET</h3>
+            <div class="row">
+              <div class="col">
+                <img
+                  src="images/sunset.png"
+                  alt="sunset-icon"
+                  width="50px"
+                  class="sunset-icon"
+                />
+                <ul>
+                  <li id="sunrise">08:00</li>
+                  <li id="sunset">17:00</li>
+                </ul>
+                <p class="currentTemp" id="currentTempInfo">-4°C</p>
+              </div>
+              <div class="col currentWeather">
+                <p class="current-weather-description">Cloudy</p>
+                <img
+                  src="images/cloudy.svg"
+                  width="300px"
+                  alt="main-Weather-image"
+                  class="main-weather-image"
+                />
+                <small class="text-muted lastUpdated"
+                  ><i class="fas fa-redo update-arrow"></i>Last updated 3 mins
+                  ago</small
+                >
+              </div>
+              <div class="col me-2">
+                <hr />
+                <h5 class="details-h5">Details</h5>
+                <hr />
+
+                <div class="row">
+                  <div class="col feelsLike detailsInfo">
+                    <i class="fas fa-thermometer-three-quarters"></i>
+                    <p id="feelsLikeTemp">Feels like: -13C</p>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col detailsInfo">
+                    <i class="fas fa-wind"></i>
+                    <p id="wind-info">Wind: -13C</p>
+                  </div>
+
+                  <div class="col detailsInfo">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-droplet"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M7.21.8C7.69.295 8 0 8 0c.109.363.234.708.371 1.038.812 1.946 2.073 3.35 3.197 4.6C12.878 7.096 14 8.345 14 10a6 6 0 0 1-12 0C2 6.668 5.58 2.517 7.21.8zm.413 1.021A31.25 31.25 0 0 0 5.794 3.99c-.726.95-1.436 2.008-1.96 3.07C3.304 8.133 3 9.138 3 10a5 5 0 0 0 10 0c0-1.201-.796-2.157-2.181-3.7l-.03-.032C9.75 5.11 8.5 3.72 7.623 1.82z"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        d="M4.553 7.776c.82-1.641 1.717-2.753 2.093-3.13l.708.708c-.29.29-1.128 1.311-1.907 2.87l-.894-.448z"
+                      />
+                    </svg>
+
+                    <p id="humidity">Humidity: -13C</p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col detailsInfo">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-eye"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"
+                      />
+                      <path
+                        d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"
+                      />
+                    </svg>
+                    <p id="visibility">visibility:</p>
+                  </div>
+                  <div class="col detailsInfo">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-speedometer2"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4zM3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707zM2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10zm9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5zm.754-4.246a.389.389 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.389.389 0 0 0-.029-.518z"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A7.988 7.988 0 0 1 0 10zm8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3z"
+                      />
+                    </svg>
+                    <p id="pressure">Pressure</p>
+                  </div>
+                </div>
+                <p class="quote">
+                  Better wrap up warmly and watch out for that wind!
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section class="buttonSelector">
+            <div class="btn-group" role="group">
+              <input
+                type="radio"
+                class="btn-check btn-lg"
+                name="btnradio"
+                id="btnradio1"
+                autocomplete="off"
+                checked
+              />
+              <label class="btn btn-outline-secondary" for="btnradio1"
+                >Daily Forecast</label
+              >
+
+              <input
+                type="radio"
+                class="btn-check btn-lg"
+                name="btnradio"
+                id="btnradio2"
+                autocomplete="off"
+              />
+              <label class="btn btn-outline-secondary" for="btnradio2"
+                >Hourly Forecast</label
+              >
+            </div>
+          </section>
+          <section class="forecastInformation">
+            <div class="card-group">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Mon</h5>
+                  <img
+                    src="images/clear-day.svg"
+                    alt=""
+                    class="forecast-icon"
+                  />
+                  <p class="card-text">
+                    <small class="text-muted">10°C/13°C</small>
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Tues</h5>
+                  <img src="images/partly-cloudy-day-snow.svg" alt=""
+                  class="forecast-icon class="forecast-icon"" />
+                  <p class="card-text">
+                    <small class="text-muted">10°C/13°C</small>
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Wed</h5>
+                  <img
+                    src="images/thunderstorms-night.svg"
+                    alt=""
+                    class="forecast-icon"
+                  />
+                  <p class="card-text">
+                    <small class="text-muted">10°C/13°C</small>
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Thurs</h5>
+                  <img src="images/rain.svg" alt="" class="forecast-icon" />
+                  <p class="card-text">
+                    <small class="text-muted">10°C/13°C</small>
+                  </p>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Fri</h5>
+                  <img src="images/tornado.svg" alt="" class="forecast-icon" />
+                  <p class="card-text">
+                    <small class="text-muted">10°C/13°C</small>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
