@@ -114,75 +114,34 @@ function getWeatherInformation(response) {
   let sunsetData = (document.querySelector("#sunset").innerText = sunsetTime);
 }
 
-//Populate search in search bar
+//Searchbar search
 let searchbtn = document.querySelector("#searchbtn");
-searchbtn.addEventListener("click", getSearchbarName);
-
-function getSearchbarName(event) {
+searchbtn.addEventListener("click", search);
+function search(event) {
   event.preventDefault();
-  let searchbarInfo = document.querySelector("#searchBar").value;
-
-  cityName = searchbarInfo;
+  cityName = document.querySelector("#searchBar").value;
   let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${units}`;
   axios.get(apiUrl).then(getWeatherInformation);
-  let h1Location = document.querySelector(".current-location");
-  h1Location.innerText = `${searchbarInfo}`;
 }
 
 //Get current time, date, month
 function createDay() {
-  let today = new Date();
-  let currentDateH3 = document.querySelector(".current-date");
+  let todayTime = new Date().toLocaleTimeString("en-us", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZoneName: "short",
+  });
 
-  let weekdayName = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-  let monthName = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "June",
-    "July",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  let currentDay = weekdayName[today.getDay()];
-  let currentDate = today.getDate();
-  let currentMonth = monthName[today.getMonth()];
-  let curentYear = today.getFullYear();
-  let currentHour = today.getHours();
-  let currentMin = today.getMinutes();
-  if (currentMin < 10) {
-    currentMin = "0" + currentMin;
-  }
-  if (currentHour < 10) {
-    currentHour = "0" + currentHour;
-  }
-  let timezone = today.getTimezoneOffset();
-  if (timezone === 0) {
-    timezone = "GTM";
-  } else if (timezone > 0) {
-    timezone = timezone / -60;
-    timezone = "GMT" + timezone;
-  } else if (timezone < 0) {
-    timezone = timezone / -60;
-    timezone = "GMT +" + timezone;
-  }
+  let todayDate = new Date().toLocaleDateString("en-UK", {
+    weekday: "long",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 
-  console.log(timezone);
-  currentDateH3.innerText = `${currentDay} ${today.getDate()} ${currentMonth} ${curentYear},   ${currentHour}:${currentMin} ${timezone}`;
+  let currentDateH3 = (document.querySelector(
+    ".current-date"
+  ).innerText = `${todayDate}, ${todayTime}`);
 }
 createDay();
-
-//get Location Data
