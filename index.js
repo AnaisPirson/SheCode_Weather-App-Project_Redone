@@ -44,6 +44,7 @@ function getWeatherInformation(response) {
   let apiCurrentTemp = response.data.main.temp;
   let apifeelsLikeTemp = response.data.main.feels_like;
   let wind = response.data.wind.speed;
+  let weatherIconId = response.data.weather[0].icon;
   cityName = response.data.name;
   console.log(response);
 
@@ -55,7 +56,13 @@ function getWeatherInformation(response) {
   //update description
   document.querySelector(
     "#weather-description"
-  ).innerText = `${response.data.weather[0].main}`;
+  ).innerText = `${response.data.weather[0].description}`;
+
+  //update main weather icon
+
+  document
+    .querySelector("#main-weather-icon")
+    .setAttribute("src", `images/${weatherIconId}.svg`);
 
   //update visibility details
   document.querySelector("#visibility").innerText = `Visibility: ${Math.round(
