@@ -1,12 +1,14 @@
 let apiKey = "d4c486d391c1e53132be6cfbb096c3a8";
 let units = "metric";
+let cityName = "Amsterdam";
+let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${units}`;
 
 //Connect API & provide default data (based on dafault city: Amsterdam)
 function searchCity(cityName) {
   let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${units}`;
   axios.get(apiUrl).then(getWeatherInformation);
 }
-searchCity("Amsterdam");
+searchCity(cityName);
 
 // Select current location
 let currentLocbtn = document.querySelector("#currentLoc");
@@ -27,8 +29,12 @@ temperatureToggle.addEventListener("click", checkTempToggle);
 function checkTempToggle() {
   if (temperatureToggle.checked === true) {
     units = "imperial";
+    let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${units}`;
+    axios.get(apiUrl).then(getWeatherInformation);
   } else {
     units = "metric";
+    let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${units}`;
+    axios.get(apiUrl).then(getWeatherInformation);
   }
   return units;
 }
@@ -38,6 +44,7 @@ function getWeatherInformation(response) {
   let apiCurrentTemp = response.data.main.temp;
   let apifeelsLikeTemp = response.data.main.feels_like;
   let wind = response.data.wind.speed;
+  cityName = response.data.name;
   console.log(response);
 
   //update h1 Location and country
@@ -66,28 +73,28 @@ function getWeatherInformation(response) {
   )}%`;
 
   if (units === "metric") {
-    let currentTemp = (document.querySelector(
-      "#currentTempInfo"
-    ).innerText = `${Math.round(apiCurrentTemp)}°C`);
+    document.querySelector("#currentTempInfo").innerText = `${Math.round(
+      apiCurrentTemp
+    )}°C`;
 
-    let feelsLikeTemp = (document.querySelector(
+    document.querySelector(
       "#feelsLikeTemp"
-    ).innerText = `Feels like: ${Math.round(apifeelsLikeTemp)}°C`);
+    ).innerText = `Feels like: ${Math.round(apifeelsLikeTemp)}°C`;
 
-    let windInfo = (document.querySelector(
-      "#wind-info"
-    ).innerText = `Wind: ${Math.round(wind)} m/s`); //meters per sec
+    document.querySelector("#wind-info").innerText = `Wind: ${Math.round(
+      wind
+    )} m/s`; //meters per sec
   } else {
-    let currentTemp = (document.querySelector(
-      "#currentTempInfo"
-    ).innerText = `${Math.round(apiCurrentTemp)}°F`);
-    let feelsLikeTemp = (document.querySelector(
+    document.querySelector("#currentTempInfo").innerText = `${Math.round(
+      apiCurrentTemp
+    )}°F`;
+    document.querySelector(
       "#feelsLikeTemp"
-    ).innerText = `Feels like: ${Math.round(apifeelsLikeTemp)}°F`);
+    ).innerText = `Feels like: ${Math.round(apifeelsLikeTemp)}°F`;
 
-    let windInfo = (document.querySelector(
-      "#wind-info"
-    ).innerText = `Wind: ${Math.round(wind)} m/h`); //miles per hour
+    document.querySelector("#wind-info").innerText = `Wind: ${Math.round(
+      wind
+    )} m/h`; //miles per hour
   }
 
   //get sunset/surise data
@@ -110,10 +117,8 @@ function getWeatherInformation(response) {
     }
   );
 
-  let sunriseData = (document.querySelector(
-    "#sunrise"
-  ).innerText = sunriseTime);
-  let sunsetData = (document.querySelector("#sunset").innerText = sunsetTime);
+  document.querySelector("#sunrise").innerText = sunriseTime;
+  document.querySelector("#sunset").innerText = sunsetTime;
 }
 
 //Searchbar search
