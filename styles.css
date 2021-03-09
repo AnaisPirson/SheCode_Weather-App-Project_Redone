@@ -1,3 +1,6 @@
+html {
+  height: 100%;
+}
 body {
   background-image: url(images/Background2.png);
   background-position: center;
@@ -179,4 +182,22 @@ footer a:hover {
 
 #weather-description {
   text-transform: capitalize;
+}
+
+.card1 .tooltiptext {
+  visibility: hidden;
+  /* background-color: black; */
+  color: grey;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+.card1:hover .tooltiptext {
+  visibility: visible;
+  /* top: -5px;
+  left: 105%; */
 }

@@ -2,6 +2,9 @@ let apiKey = "d4c486d391c1e53132be6cfbb096c3a8";
 let units = "metric";
 let cityName = "Amsterdam";
 let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${units}`;
+let coordinates = [];
+let longitude = 4.800469;
+let latitude = 52.3598953;
 
 //Connect API & provide default data (based on dafault city: Amsterdam)
 function searchCity(cityName) {
@@ -17,8 +20,8 @@ function getCurrentLocation() {
   let geoData = navigator.geolocation.getCurrentPosition(searchCurrentLocation);
 }
 function searchCurrentLocation(position) {
-  let longitude = position.coords.longitude;
-  let latitude = position.coords.latitude;
+  longitude = position.coords.longitude;
+  latitude = position.coords.latitude;
   apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=${units}`;
   axios.get(apiUrl).then(getWeatherInformation);
 }
@@ -46,6 +49,9 @@ function getWeatherInformation(response) {
   let wind = response.data.wind.speed;
   let weatherIconId = response.data.weather[0].icon;
   cityName = response.data.name;
+  coordinates[0] = response.data.coord.lon; //longitude
+  coordinates[1] = response.data.coord.lat; //latitude
+
   console.log(response);
 
   //update h1 Location and country
@@ -59,7 +65,6 @@ function getWeatherInformation(response) {
   ).innerText = `${response.data.weather[0].description}`;
 
   //update main weather icon
-
   document
     .querySelector("#main-weather-icon")
     .setAttribute("src", `images/${weatherIconId}.svg`);
@@ -126,6 +131,8 @@ function getWeatherInformation(response) {
 
   document.querySelector("#sunrise").innerText = sunriseTime;
   document.querySelector("#sunset").innerText = sunsetTime;
+
+  return coordinates;
 }
 
 //Searchbar search
@@ -158,3 +165,165 @@ function createDay() {
   ).innerText = `${todayDate}, ${todayTime}`);
 }
 createDay();
+
+//Daily Forecast toggle
+let forecastBtns = document.querySelectorAll(".forecastBtns");
+
+forecastBtns.forEach(function (elem) {
+  elem.addEventListener("click", checkForecastToggle);
+});
+
+function checkForecastToggle() {
+  if (document.querySelector("#btnradio1").checked) {
+    //update weekday info
+    let weekdays = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
+    let day0 = new Date().getDay();
+    let day1 = day0 + 1;
+    let day2 = day0 + 2;
+    let day3 = day0 + 3;
+    let day4 = day0 + 4;
+    document.querySelector("#time-period1-header").innerText = weekdays[day0];
+    document.querySelector("#time-period2-header").innerText = weekdays[day1];
+    document.querySelector("#time-period3-header").innerText = weekdays[day2];
+    document.querySelector("#time-period4-header").innerText = weekdays[day3];
+    document.querySelector("#time-period5-header").innerText = weekdays[day4];
+
+    let apiUrl2 = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`;
+
+    axios.get(apiUrl2).then(getDailyWeatherInfo);
+  } else {
+    let currentHour = new Date().getHours();
+    document.querySelector("#time-period1-header").innerText = `${
+      currentHour + 1
+    }:00`;
+    document.querySelector("#time-period2-header").innerText = `${
+      currentHour + 2
+    }:00`;
+    document.querySelector("#time-period3-header").innerText = `${
+      currentHour + 3
+    }:00`;
+    document.querySelector("#time-period4-header").innerText = `${
+      currentHour + 4
+    }:00`;
+    document.querySelector("#time-period5-header").innerText = `${
+      currentHour + 5
+    }:00`;
+    let apiUrl2 = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`;
+    axios.get(apiUrl2).then(getHourlyWeatherInfo);
+  }
+}
+checkForecastToggle();
+function getDailyWeatherInfo(response) {
+  console.log(response);
+  document.querySelector("#time-period1-info").innerText = `${Math.round(
+    response.data.daily[0].temp.min
+  )}°C/${Math.round(response.data.daily[0].temp.max)}°C`;
+  document
+    .querySelector("#time-period2-icon")
+    .setAttribute(
+      "src",
+      `images/${response.data.daily[1].weather[0].icon}.svg`
+    );
+
+  document
+    .querySelector("#time-period1-icon")
+    .setAttribute(
+      "src",
+      `images/${response.data.daily[0].weather[0].icon}.svg`
+    );
+
+  document.querySelector("#time-period2-info").innerText = `${Math.round(
+    response.data.daily[1].temp.min
+  )}°C/${Math.round(response.data.daily[1].temp.max)}°C`;
+  document
+    .querySelector("#time-period2-icon")
+    .setAttribute(
+      "src",
+      `images/${response.data.daily[1].weather[0].icon}.svg`
+    );
+
+  document.querySelector("#time-period3-info").innerText = `${Math.round(
+    response.data.daily[2].temp.min
+  )}°C/${Math.round(response.data.daily[2].temp.max)}°C`;
+  document
+    .querySelector("#time-period3-icon")
+    .setAttribute(
+      "src",
+      `images/${response.data.daily[2].weather[0].icon}.svg`
+    );
+
+  document.querySelector("#time-period4-info").innerText = `${Math.round(
+    response.data.daily[3].temp.min
+  )}°C/${Math.round(response.data.daily[3].temp.max)}°C`;
+  document
+    .querySelector("#time-period4-icon")
+    .setAttribute(
+      "src",
+      `images/${response.data.daily[3].weather[0].icon}.svg`
+    );
+
+  document.querySelector("#time-period5-info").innerText = `${Math.round(
+    response.data.daily[4].temp.min
+  )}°C/${Math.round(response.data.daily[4].temp.max)}°C`;
+  document
+    .querySelector("#time-period5-icon")
+    .setAttribute(
+      "src",
+      `images/${response.data.daily[4].weather[0].icon}.svg`
+    );
+}
+
+function getHourlyWeatherInfo(response) {
+  document.querySelector("#time-period1-info").innerText = `${Math.round(
+    response.data.hourly[1].temp
+  )}°C`;
+  document
+    .querySelector("#time-period1-icon")
+    .setAttribute(
+      "src",
+      `images/${response.data.hourly[1].weather[0].icon}.svg`
+    );
+
+  document.querySelector("#time-period2-info").innerText = `${Math.round(
+    response.data.hourly[2].temp
+  )}°C`;
+  document
+    .querySelector("#time-period2-icon")
+    .setAttribute(
+      "src",
+      `images/${response.data.hourly[2].weather[0].icon}.svg`
+    );
+
+  document.querySelector("#time-period3-info").innerText = `${Math.round(
+    response.data.hourly[3].temp
+  )}°C`;
+  document
+    .querySelector("#time-period3-icon")
+    .setAttribute(
+      "src",
+      `images/${response.data.hourly[3].weather[0].icon}.svg`
+    );
+
+  document.querySelector("#time-period4-info").innerText = `${Math.round(
+    response.data.hourly[4].temp
+  )}°C`;
+  document
+    .querySelector("#time-period4-icon")
+    .setAttribute(
+      "src",
+      `images/${response.data.hourly[4].weather[0].icon}.svg`
+    );
+
+  document.querySelector("#time-period5-info").innerText = `${Math.round(
+    response.data.hourly[5].temp
+  )}°C`;
+  document
+    .querySelector("#time-period5-icon")
+    .setAttribute(
+      "src",
+      `images/${response.data.hourly[5].weather[0].icon}.svg`
+    );
+}
+
+// longitude = coordinates[0];
+// latitude = coordinates[1];
