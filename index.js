@@ -2,13 +2,14 @@ let apiKey = "d4c486d391c1e53132be6cfbb096c3a8";
 let units = "metric";
 let cityName = "Amsterdam";
 let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${units}`;
+let apiUrl2;
 let coordinates = [];
 let longitude = 4.800469;
 let latitude = 52.3598953;
 
 //Connect API & provide default data (based on dafault city: Amsterdam)
 function searchCity(cityName) {
-  let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${units}`;
+  apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${units}`;
   axios.get(apiUrl).then(getWeatherInformation);
 }
 searchCity(cityName);
@@ -24,6 +25,8 @@ function searchCurrentLocation(position) {
   latitude = position.coords.latitude;
   apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=${units}`;
   axios.get(apiUrl).then(getWeatherInformation);
+  apiUrl2 = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=${units}&appid=${apiKey}`;
+  axios.get(apiUrl2).then(getDailyWeatherInfo);
 }
 
 //Convert C & F
@@ -32,12 +35,16 @@ temperatureToggle.addEventListener("click", checkTempToggle);
 function checkTempToggle() {
   if (temperatureToggle.checked === true) {
     units = "imperial";
-    let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${units}`;
+    apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${units}`;
     axios.get(apiUrl).then(getWeatherInformation);
+    apiUrl2 = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=${units}&appid=${apiKey}`;
+    axios.get(apiUrl2).then(getDailyWeatherInfo);
   } else {
     units = "metric";
-    let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${units}`;
+    apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${units}`;
     axios.get(apiUrl).then(getWeatherInformation);
+    apiUrl2 = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=${units}&appid=${apiKey}`;
+    axios.get(apiUrl2).then(getDailyWeatherInfo);
   }
   return units;
 }
@@ -51,7 +58,10 @@ function getWeatherInformation(response) {
   cityName = response.data.name;
   coordinates[0] = response.data.coord.lon; //longitude
   coordinates[1] = response.data.coord.lat; //latitude
-
+  longitude = response.data.coord.lon;
+  latitude = response.data.coord.lat;
+  apiUrl2 = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=${units}&appid=${apiKey}`;
+  axios.get(apiUrl2).then(getDailyWeatherInfo);
   console.log(response);
 
   //update h1 Location and country
@@ -188,7 +198,7 @@ function checkForecastToggle() {
     document.querySelector("#time-period4-header").innerText = weekdays[day3];
     document.querySelector("#time-period5-header").innerText = weekdays[day4];
 
-    let apiUrl2 = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`;
+    apiUrl2 = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=${units}&appid=${apiKey}`;
 
     axios.get(apiUrl2).then(getDailyWeatherInfo);
   } else {
@@ -208,16 +218,22 @@ function checkForecastToggle() {
     document.querySelector("#time-period5-header").innerText = `${
       currentHour + 5
     }:00`;
-    let apiUrl2 = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`;
+    let apiUrl2 = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=${units}&appid=${apiKey}`;
     axios.get(apiUrl2).then(getHourlyWeatherInfo);
   }
 }
 checkForecastToggle();
 function getDailyWeatherInfo(response) {
   console.log(response);
+  let degree;
+  if (units === "metric") {
+    degree = "C";
+  } else {
+    degree = "F";
+  }
   document.querySelector("#time-period1-info").innerText = `${Math.round(
     response.data.daily[0].temp.min
-  )}°C/${Math.round(response.data.daily[0].temp.max)}°C`;
+  )}°${degree}/${Math.round(response.data.daily[0].temp.max)}°${degree}`;
   document
     .querySelector("#time-period2-icon")
     .setAttribute(
@@ -234,7 +250,7 @@ function getDailyWeatherInfo(response) {
 
   document.querySelector("#time-period2-info").innerText = `${Math.round(
     response.data.daily[1].temp.min
-  )}°C/${Math.round(response.data.daily[1].temp.max)}°C`;
+  )}°${degree}/${Math.round(response.data.daily[1].temp.max)}°${degree}`;
   document
     .querySelector("#time-period2-icon")
     .setAttribute(
@@ -244,7 +260,7 @@ function getDailyWeatherInfo(response) {
 
   document.querySelector("#time-period3-info").innerText = `${Math.round(
     response.data.daily[2].temp.min
-  )}°C/${Math.round(response.data.daily[2].temp.max)}°C`;
+  )}°${degree}/${Math.round(response.data.daily[2].temp.max)}°${degree}`;
   document
     .querySelector("#time-period3-icon")
     .setAttribute(
@@ -254,7 +270,7 @@ function getDailyWeatherInfo(response) {
 
   document.querySelector("#time-period4-info").innerText = `${Math.round(
     response.data.daily[3].temp.min
-  )}°C/${Math.round(response.data.daily[3].temp.max)}°C`;
+  )}°${degree}/${Math.round(response.data.daily[3].temp.max)}°${degree}`;
   document
     .querySelector("#time-period4-icon")
     .setAttribute(
@@ -264,7 +280,7 @@ function getDailyWeatherInfo(response) {
 
   document.querySelector("#time-period5-info").innerText = `${Math.round(
     response.data.daily[4].temp.min
-  )}°C/${Math.round(response.data.daily[4].temp.max)}°C`;
+  )}°${degree}/${Math.round(response.data.daily[4].temp.max)}°${degree}`;
   document
     .querySelector("#time-period5-icon")
     .setAttribute(
@@ -274,9 +290,16 @@ function getDailyWeatherInfo(response) {
 }
 
 function getHourlyWeatherInfo(response) {
+  let degree;
+  if (units === "metric") {
+    degree = "C";
+  } else {
+    degree = "F";
+  }
+
   document.querySelector("#time-period1-info").innerText = `${Math.round(
     response.data.hourly[1].temp
-  )}°C`;
+  )}°${degree}`;
   document
     .querySelector("#time-period1-icon")
     .setAttribute(
@@ -286,7 +309,7 @@ function getHourlyWeatherInfo(response) {
 
   document.querySelector("#time-period2-info").innerText = `${Math.round(
     response.data.hourly[2].temp
-  )}°C`;
+  )}°${degree}`;
   document
     .querySelector("#time-period2-icon")
     .setAttribute(
@@ -296,7 +319,7 @@ function getHourlyWeatherInfo(response) {
 
   document.querySelector("#time-period3-info").innerText = `${Math.round(
     response.data.hourly[3].temp
-  )}°C`;
+  )}°${degree}`;
   document
     .querySelector("#time-period3-icon")
     .setAttribute(
@@ -306,7 +329,7 @@ function getHourlyWeatherInfo(response) {
 
   document.querySelector("#time-period4-info").innerText = `${Math.round(
     response.data.hourly[4].temp
-  )}°C`;
+  )}°${degree}`;
   document
     .querySelector("#time-period4-icon")
     .setAttribute(
@@ -316,7 +339,7 @@ function getHourlyWeatherInfo(response) {
 
   document.querySelector("#time-period5-info").innerText = `${Math.round(
     response.data.hourly[5].temp
-  )}°C`;
+  )}°${degree}`;
   document
     .querySelector("#time-period5-icon")
     .setAttribute(
